@@ -4,7 +4,7 @@ import CustomRunner from "./CustomRunner";
 
 async function loadPyodide(): Promise<any> {
   const script = await fetch(
-    "https://cdn.jsdelivr.net/pyodide/v0.24.0/full/pyodide.js"
+    "https://cdn.jsdelivr.net/pyodide/v0.24.0/full/pyodide.js",
   ).then((res) => res.text());
   unsafeWindow["Function"](script)();
   const pyodide = await unsafeWindow["loadPyodide"]({
@@ -83,7 +83,7 @@ def __run():
           error: stderr,
         });
       });
-    })
+    }),
 );
 
 export default pyodideRunner;

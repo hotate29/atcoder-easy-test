@@ -3,4 +3,4 @@ export default interface Options {
   split?: boolean;
   trim?: boolean;
   runGroupId?: string;
-};
+}

@@ -3,8 +3,8 @@ import settings from "./settings";
 import { newElement } from "./util";
 
 interface SavedCode {
-  path: string,
-  code: string,
+  path: string;
+  code: string;
 }
 
 config.registerCount("codeSaver.limit", 10, "Max number to save codes");
@@ -16,7 +16,7 @@ const codeSaver = {
     let data: SavedCode[] = [];
     try {
       if (typeof json == "string") {
-        data.push(...JSON.parse(json) as SavedCode[]);
+        data.push(...(JSON.parse(json) as SavedCode[]));
       } else {
         data = [];
       }
@@ -35,11 +35,11 @@ const codeSaver = {
 
   save(savePath: string, code: string) {
     let data = codeSaver.get();
-    const idx = data.findIndex(({path}) => path == savePath);
+    const idx = data.findIndex(({ path }) => path == savePath);
     if (idx != -1) data.splice(idx, idx + 1);
     data.push({
-        path: savePath,
-        code,
+      path: savePath,
+      code,
     });
     while (data.length > config.get("codeSaver.limit", 10)) data.shift();
     codeSaver.set(data);
@@ -47,10 +47,11 @@ const codeSaver = {
 
   restore(savedPath: string): Promise<string> {
     const data = codeSaver.get();
-    const idx = data.findIndex(({path}) => path === savedPath);
-    if (idx == -1 || !(data[idx] instanceof Object)) return Promise.reject(`No saved code found for ${location.pathname}`);
+    const idx = data.findIndex(({ path }) => path === savedPath);
+    if (idx == -1 || !(data[idx] instanceof Object))
+      return Promise.reject(`No saved code found for ${location.pathname}`);
     return Promise.resolve(data[idx].code);
-  }
+  },
 };
 
 settings.add(`codeSaver (${location.host})`, (win) => {
@@ -63,18 +64,20 @@ settings.add(`codeSaver (${location.host})`, (win) => {
     ]),
     newElement("tbody"),
   ]);
-  root.tBodies
+  root.tBodies;
   for (const savedCode of codeSaver.get()) {
-    root.tBodies[0].appendChild(newElement("tr", {}, [
-      newElement("td", { textContent: savedCode.path }),
-      newElement("td", {}, [
-        newElement("textarea", {
-          rows: 1,
-          cols: 30,
-          textContent: savedCode.code,
-        }),
+    root.tBodies[0].appendChild(
+      newElement("tr", {}, [
+        newElement("td", { textContent: savedCode.path }),
+        newElement("td", {}, [
+          newElement("textarea", {
+            rows: 1,
+            cols: 30,
+            textContent: savedCode.code,
+          }),
+        ]),
       ]),
-    ]));
+    );
   }
   return root;
 });

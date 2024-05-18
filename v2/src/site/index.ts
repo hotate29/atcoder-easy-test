@@ -11,14 +11,27 @@ const inits = [init_config()];
 config.registerFlag("site.atcoder", true, "Use AtCoder Easy Test in AtCoder");
 if (config.get("site.atcoder", true)) inits.push(init_AtCoder());
 
-config.registerFlag("site.yukicoder", true, "Use AtCoder Easy Test in yukicoder");
+config.registerFlag(
+  "site.yukicoder",
+  true,
+  "Use AtCoder Easy Test in yukicoder",
+);
 if (config.get("site.yukicoder", true)) inits.push(init_yukicoder());
 
-config.registerFlag("site.codeforces", true, "Use AtCoder Easy Test in Codeforces");
+config.registerFlag(
+  "site.codeforces",
+  true,
+  "Use AtCoder Easy Test in Codeforces",
+);
 if (config.get("site.codeforces", true)) inits.push(init_Codeforces());
 
-config.registerFlag("site.codeforcesMobile", true, "Use AtCoder Easy Test in Codeforces Mobile (m[1-3].codeforces.com)");
-if (config.get("site.codeforcesMobile", true)) inits.push(init_CodeforcesMobile());
+config.registerFlag(
+  "site.codeforcesMobile",
+  true,
+  "Use AtCoder Easy Test in Codeforces Mobile (m[1-3].codeforces.com)",
+);
+if (config.get("site.codeforcesMobile", true))
+  inits.push(init_CodeforcesMobile());
 
 const site = Promise.any(inits);
 export default site;

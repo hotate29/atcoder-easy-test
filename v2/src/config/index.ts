@@ -2,10 +2,10 @@ import { newElement, uuid } from "../util";
 import settings from "../settings";
 
 interface Option<T> {
-  type: "flag" | "count",
-  key: string,
-  defaultValue: T,
-  description: string,
+  type: "flag" | "count";
+  key: string;
+  defaultValue: T;
+  description: string;
 }
 
 const options: Option<any>[] = [];
@@ -63,42 +63,50 @@ settings.add("config", (win: Window) => {
     root.appendChild(group);
     switch (type) {
       case "flag": {
-        control.appendChild(newElement<HTMLInputElement>("input", {
-          id,
-          type: "checkbox",
-          checked: config.get(key, defaultValue),
-          onchange() {
-            config.set(key, this.checked);
-          },
-        }));
+        control.appendChild(
+          newElement<HTMLInputElement>("input", {
+            id,
+            type: "checkbox",
+            checked: config.get(key, defaultValue),
+            onchange() {
+              config.set(key, this.checked);
+            },
+          }),
+        );
         break;
       }
       case "count": {
-        control.appendChild(newElement<HTMLInputElement>("input", {
-          id,
-          type: "number",
-          min: "0",
-          value: config.get(key, defaultValue),
-          onchange() {
-            config.set(key, +this.value);
-          },
-        }));
+        control.appendChild(
+          newElement<HTMLInputElement>("input", {
+            id,
+            type: "number",
+            min: "0",
+            value: config.get(key, defaultValue),
+            onchange() {
+              config.set(key, +this.value);
+            },
+          }),
+        );
         break;
       }
       default:
-        throw new TypeError(`AtCoderEasyTest.setting: undefined option type ${type} for ${key}`);
+        throw new TypeError(
+          `AtCoderEasyTest.setting: undefined option type ${type} for ${key}`,
+        );
     }
   }
-  root.appendChild(newElement("button", {
-    className: "btn btn-danger",
-    textContent: "Reset",
-    type: "button",
-    onclick() {
-      if (win.confirm("Configuration data will be cleared. Are you sure?")) {
-        config.reset();
-      }
-    },
-  }));
+  root.appendChild(
+    newElement("button", {
+      className: "btn btn-danger",
+      textContent: "Reset",
+      type: "button",
+      onclick() {
+        if (win.confirm("Configuration data will be cleared. Are you sure?")) {
+          config.reset();
+        }
+      },
+    }),
+  );
   return root;
 });
 
@@ -144,6 +152,6 @@ const config = {
       description,
     });
   },
-}
+};
 
 export default config;

@@ -8,12 +8,23 @@ declare interface AtCoderWindow extends Window {
   // AtCoder Easy Test v2
   bottomMenu: {
     selectTab(tabId: string): void;
-    addTab(tabId: string, tabLabel: string, paneContent: Node, options?: {}): any;
+    addTab(
+      tabId: string,
+      tabLabel: string,
+      paneContent: Node,
+      options?: {},
+    ): any;
     show(): void;
     toggle(): void;
   };
   codeRunner: {
-    run(languageId: string, sourceCode: string, input: string, expectedOutput: string | null, options: any): Promise<any>;
+    run(
+      languageId: string,
+      sourceCode: string,
+      input: string,
+      expectedOutput: string | null,
+      options: any,
+    ): Promise<any>;
     getEnvironment(languageId: string): Promise<[string, string][]>;
   };
 }

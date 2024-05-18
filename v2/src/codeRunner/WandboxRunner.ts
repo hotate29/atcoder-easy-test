@@ -3,17 +3,19 @@ import Options from "./Options";
 import CodeRunner from "./CodeRunner";
 
 interface WandboxRequest {
-  compiler: string,
-  code: string,
-  stdin?: string,
-  codes?: Array<string>,
+  compiler: string;
+  code: string;
+  stdin?: string;
+  codes?: Array<string>;
   // compiler-option-raw は、改行で区切ってコンパイルオプションを指定する（例: `g++ -DONLINE_JUDGE -I.` なら "-DONLINE_JUDGE\n-I."）
-  "compiler-option-raw"?: string,
+  "compiler-option-raw"?: string;
 }
 
 export default class WandboxRunner extends CodeRunner {
   name: string;
-  options: { [key: string]: string } | ((sourceCode: string, input: string) => { [key: string]: string });
+  options:
+    | { [key: string]: string }
+    | ((sourceCode: string, input: string) => { [key: string]: string });
 
   constructor(name: string, label: string, options = {}) {
     super(label, "Wandbox");
@@ -22,16 +24,26 @@ export default class WandboxRunner extends CodeRunner {
   }
 
   getOptions(sourceCode: string, input: string): { [key: string]: string } {
-    if (typeof this.options == "function") return this.options(sourceCode, input);
+    if (typeof this.options == "function")
+      return this.options(sourceCode, input);
     return this.options;
   }
 
-  run(sourceCode: string, input: string, options: Options = {}): Promise<Result> {
-    return this.request(Object.assign({
-      compiler: this.name,
-      code: sourceCode,
-      stdin: input,
-    }, Object.assign(options, this.getOptions(sourceCode, input))));
+  run(
+    sourceCode: string,
+    input: string,
+    options: Options = {},
+  ): Promise<Result> {
+    return this.request(
+      Object.assign(
+        {
+          compiler: this.name,
+          code: sourceCode,
+          stdin: input,
+        },
+        Object.assign(options, this.getOptions(sourceCode, input)),
+      ),
+    );
   }
 
   async request(body: WandboxRequest): Promise<Result> {
@@ -45,7 +57,7 @@ export default class WandboxRunner extends CodeRunner {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
-      }).then(r => r.json());
+      }).then((r) => r.json());
     } catch (error) {
       console.error(error);
       return {
@@ -70,8 +82,10 @@ export default class WandboxRunner extends CodeRunner {
       if (res.signal) {
         result.exitCode += ` (${res.signal})`;
       }
-      result.output = String(res.compiler_output || "") + String(result.output || "");
-      result.error = String(res.compiler_error || "") + String(result.error || "");
+      result.output =
+        String(res.compiler_output || "") + String(result.output || "");
+      result.error =
+        String(res.compiler_error || "") + String(result.error || "");
       if (res.compiler_output || res.compiler_error) {
         result.status = "CE";
       } else {

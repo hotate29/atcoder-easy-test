@@ -6,7 +6,7 @@ import hResultList from "./resultList.html";
 import pSite from "../site";
 
 const eResultList = html2element(hResultList) as HTMLDivElement;
-pSite.then(site => site.resultListContainer.appendChild(eResultList));
+pSite.then((site) => site.resultListContainer.appendChild(eResultList));
 
 const resultList = {
   addResult(pairs: [Promise<Result>, Promise<BottomMenuTab>][]): ResultRow {

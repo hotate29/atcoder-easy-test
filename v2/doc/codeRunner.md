@@ -16,7 +16,6 @@ codeRunner は、「与えられたコードおよび入力を、オンライン
     - `expectedOutput`: 期待される標準出力です。与えた場合、正誤判定します。
     - `options`: 実行時のオプションです。
 
-
 ## Options.ts
 
 `Options` は `CodeRunner` に渡すオプションのフィールドです。

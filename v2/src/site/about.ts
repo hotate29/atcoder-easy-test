@@ -4,35 +4,63 @@ import config from "../config";
 import settings from "../settings";
 
 async function init() {
-  if (location.host != "greasyfork.org" && !location.href.match(/433152-atcoder-easy-test-v2/)) throw "Not about page";
+  if (
+    location.host != "greasyfork.org" &&
+    !location.href.match(/433152-atcoder-easy-test-v2/)
+  )
+    throw "Not about page";
 
   const doc = unsafeWindow.document;
 
-  await loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js");
+  await loadScript(
+    "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js",
+  );
   const jQuery = unsafeWindow["jQuery"];
-  await loadScript("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", null, { jQuery, $: jQuery });
+  await loadScript(
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js",
+    null,
+    { jQuery, $: jQuery },
+  );
 
   const e = newElement("div");
 
-  doc.getElementById("install-area").appendChild(newElement("button", {
-    type: "button",
-    textContent: "Open config",
-    onclick: () => settings.open(),
-  }));
+  doc.getElementById("install-area").appendChild(
+    newElement("button", {
+      type: "button",
+      textContent: "Open config",
+      onclick: () => settings.open(),
+    }),
+  );
 
   return {
     name: "About Page",
     language: new ObservableValue(""),
-    get sourceCode(): string { return ""; },
+    get sourceCode(): string {
+      return "";
+    },
     set sourceCode(sourceCode: string) {},
     submit(): void {},
-    get testButtonContainer(): HTMLElement { return e; },
-    get sideButtonContainer(): HTMLElement { return e; },
-    get bottomMenuContainer(): HTMLElement { return e; },
-    get resultListContainer(): HTMLElement { return e; },
-    get testCases(): TestCase[] { return []; },
-    get jQuery(): any { return jQuery; },
-    get taskURI(): string { return ""; },
+    get testButtonContainer(): HTMLElement {
+      return e;
+    },
+    get sideButtonContainer(): HTMLElement {
+      return e;
+    },
+    get bottomMenuContainer(): HTMLElement {
+      return e;
+    },
+    get resultListContainer(): HTMLElement {
+      return e;
+    },
+    get testCases(): TestCase[] {
+      return [];
+    },
+    get jQuery(): any {
+      return jQuery;
+    },
+    get taskURI(): string {
+      return "";
+    },
   };
 }
 

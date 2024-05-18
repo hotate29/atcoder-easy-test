@@ -3,10 +3,15 @@ import TestCase from "../TestCase";
 import langMap from "./codeforcesLangMap";
 import { ObservableValue, loadScript, newElement } from "../util";
 
-config.registerFlag("site.codeforcesMobile.showEditor", true, "Show Editor in Mobile Codeforces (m[1-3].codeforces.com) Problem Page");
+config.registerFlag(
+  "site.codeforcesMobile.showEditor",
+  true,
+  "Show Editor in Mobile Codeforces (m[1-3].codeforces.com) Problem Page",
+);
 
 async function init() {
-  if (!/^m[1-3]\.codeforces\.com$/.test(location.host)) throw "not Codeforces Mobile";
+  if (!/^m[1-3]\.codeforces\.com$/.test(location.host))
+    throw "not Codeforces Mobile";
 
   const url = /\/contest\/(\d+)\/problem\/([^/]+)/.exec(location.pathname);
   const contestId = url[1];
@@ -15,12 +20,16 @@ async function init() {
   const doc = unsafeWindow.document;
   const main = doc.querySelector("main");
 
-  doc.head.appendChild(newElement("link", {
-    rel: "stylesheet",
-    href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-  }));
+  doc.head.appendChild(
+    newElement("link", {
+      rel: "stylesheet",
+      href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+    }),
+  );
 
-  await loadScript("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js");
+  await loadScript(
+    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js",
+  );
 
   const language = new ObservableValue("");
   let submit = () => {};
@@ -36,7 +45,7 @@ async function init() {
       },
     });
     doc.body.appendChild(frame);
-    await new Promise(done => frame.onload = done);
+    await new Promise((done) => (frame.onload = done));
     const fdoc = frame.contentDocument;
     const form = fdoc.querySelector<HTMLFormElement>("._SubmitPage_submitForm");
 
@@ -59,9 +68,9 @@ async function init() {
 
     submit = () => form.submit();
     getSourceCode = () => form.elements["source"].value;
-    setSourceCode = sourceCode => {
+    setSourceCode = (sourceCode) => {
       form.elements["source"].value = sourceCode;
-    }
+    };
   }
 
   return {
@@ -91,10 +100,14 @@ async function init() {
       let index = 1;
       for (const container of doc.querySelectorAll(".sample-test")) {
         const input = container.querySelector(".input pre.content").textContent;
-        const output = container.querySelector(".output pre.content").textContent;
+        const output = container.querySelector(
+          ".output pre.content",
+        ).textContent;
         const anchor = container.querySelector(".input .title");
         testcases.push({
-          input, output, anchor,
+          input,
+          output,
+          anchor,
           title: `Sample ${index++}`,
         });
       }

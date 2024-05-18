@@ -1,13 +1,21 @@
 export function buildParams(data: { [key: string]: string }): string {
-  return Object.entries(data).map(([key, value]) => encodeURIComponent(key) + "=" + encodeURIComponent(value)).join("&");
+  return Object.entries(data)
+    .map(
+      ([key, value]) =>
+        encodeURIComponent(key) + "=" + encodeURIComponent(value),
+    )
+    .join("&");
 }
 
 export function sleep(ms: number): Promise<void> {
-  return new Promise(done => setTimeout(done, ms));
+  return new Promise((done) => setTimeout(done, ms));
 }
 
 export function doneOrFail<T>(p: Promise<T>): Promise<void> {
-  return p.then(() => Promise.resolve(), () => Promise.resolve());
+  return p.then(
+    () => Promise.resolve(),
+    () => Promise.resolve(),
+  );
 }
 
 export function html2element(html: string): Node {
@@ -16,7 +24,11 @@ export function html2element(html: string): Node {
   return template.content.firstChild;
 }
 
-export function newElement<T extends HTMLElement>(tagName: string, attrs: any = {}, children = []): T {
+export function newElement<T extends HTMLElement>(
+  tagName: string,
+  attrs: any = {},
+  children = [],
+): T {
   const e = document.createElement(tagName) as T;
   for (const [key, value] of Object.entries(attrs)) {
     if (key == "style") {
@@ -34,13 +46,17 @@ export function newElement<T extends HTMLElement>(tagName: string, attrs: any = 
 }
 
 export function uuid(): string {
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".
-    replace(/x/g, () => "0123456789abcdef"[Math.random() * 16 | 0]).
-    replace(/y/g, () => "89ab"[Math.random() * 4 | 0]);
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+    .replace(/x/g, () => "0123456789abcdef"[(Math.random() * 16) | 0])
+    .replace(/y/g, () => "89ab"[(Math.random() * 4) | 0]);
 }
 
-export async function loadScript(src: string, ctx = null, env: any = {}): Promise<void> {
-  const js = await fetch(src).then(res => res.text());
+export async function loadScript(
+  src: string,
+  ctx = null,
+  env: any = {},
+): Promise<void> {
+  const js = await fetch(src).then((res) => res.text());
   const keys = [];
   const values = [];
   for (const [key, value] of Object.entries(env)) {
@@ -54,7 +70,10 @@ const eventListeners = {};
 
 export const events = {
   on(name: string, listener: () => void) {
-    const listeners = (name in eventListeners ? eventListeners[name] : eventListeners[name] = []);
+    const listeners =
+      name in eventListeners
+        ? eventListeners[name]
+        : (eventListeners[name] = []);
     listeners.push(listener);
   },
 
@@ -94,7 +113,7 @@ export class ObservableValue<T> {
 
   map<U>(f: (value: T) => U): ObservableValue<U> {
     const y = new ObservableValue(f(this.value));
-    this.addListener(x => {
+    this.addListener((x) => {
       y.value = f(x);
     });
     return y;

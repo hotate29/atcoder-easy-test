@@ -15,4 +15,4 @@ export default interface Result {
   exitCode?: string;
   execTime?: number;
   memory?: number;
-};
+}

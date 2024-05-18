@@ -1,7 +1,7 @@
 import { newElement } from "../util";
 import hPage from "./page.html";
 
-const components: { title: string; generator: (win: Window) => Node; }[] = [];
+const components: { title: string; generator: (win: Window) => Node }[] = [];
 
 const settings = {
   add(title: string, generator: (win: Window) => Node): void {

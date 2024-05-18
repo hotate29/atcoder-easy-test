@@ -7,7 +7,9 @@ const version = {
   get current(): string {
     return this.currentProperty.value;
   },
-  latestProperty: new ObservableValue(config.get("version.latest", "$_ATCODER_EASY_TEST_VERSION")),
+  latestProperty: new ObservableValue(
+    config.get("version.latest", "$_ATCODER_EASY_TEST_VERSION"),
+  ),
   get latest(): string {
     return this.latestProperty.value;
   },
@@ -32,10 +34,15 @@ const version = {
   },
   async checkUpdate(force: boolean = false): Promise<string> {
     const now = Date.now();
-    if (!force && now - version.lastCheck < config.get("version.checkInterval", aDay)) {
+    if (
+      !force &&
+      now - version.lastCheck < config.get("version.checkInterval", aDay)
+    ) {
       return this.current;
     }
-    const packageJson = await fetch("https://raw.githubusercontent.com/magurofly/atcoder-easy-test/main/v2/package.json").then(r => r.json());
+    const packageJson = await fetch(
+      "https://raw.githubusercontent.com/magurofly/atcoder-easy-test/main/v2/package.json",
+    ).then((r) => r.json());
     console.log(packageJson);
     const latest = packageJson["version"] as string;
     this.latestProperty.value = latest;
@@ -48,7 +55,11 @@ const version = {
 
 // 更新チェック
 const aDay = 24 * 60 * 60 * 1e3;
-config.registerCount("version.checkInterval", aDay, "Interval [ms] of checking for new version");
+config.registerCount(
+  "version.checkInterval",
+  aDay,
+  "Interval [ms] of checking for new version",
+);
 const interval: number = config.get("version.checkInterval", aDay);
 setInterval(() => {
   version.checkUpdate(false);
@@ -60,20 +71,21 @@ settings.add("version", (win) => {
   const text = win.document.createTextNode.bind(win.document);
   const textAuto = (property) => {
     const t = text(property.value);
-    property.addListener(value => {
+    property.addListener((value) => {
       t.textContent = value;
-    })
+    });
     return t;
   };
 
   const tCurrent = textAuto(version.currentProperty);
   const tLatest = textAuto(version.latestProperty);
-  const tLastCheck = textAuto(version.lastCheckProperty.map(time => new Date(time).toLocaleString()));
+  const tLastCheck = textAuto(
+    version.lastCheckProperty.map((time) => new Date(time).toLocaleString()),
+  );
 
-  root.appendChild(newElement("p", {}, [
-    text("AtCoder Easy Test v"),
-    tCurrent,
-  ]));
+  root.appendChild(
+    newElement("p", {}, [text("AtCoder Easy Test v"), tCurrent]),
+  );
 
   const updateButton = newElement("a", {
     className: "btn btn-info",
@@ -88,24 +100,28 @@ settings.add("version", (win) => {
   showButton();
   version.lastCheckProperty.addListener(showButton);
 
-  root.appendChild(newElement("p", {}, [
-    text("Latest: v"),
-    tLatest,
-    text(" (Last Check: "),
-    tLastCheck,
-    text(") "),
-    updateButton,
-  ]));
+  root.appendChild(
+    newElement("p", {}, [
+      text("Latest: v"),
+      tLatest,
+      text(" (Last Check: "),
+      tLastCheck,
+      text(") "),
+      updateButton,
+    ]),
+  );
 
-  root.appendChild(newElement("p", {}, [
-    newElement("a", {
-      className: "btn btn-primary",
-      textContent: "Check Update",
-      onclick() {
-        version.checkUpdate(true);
-      },
-    }),
-  ]));
+  root.appendChild(
+    newElement("p", {}, [
+      newElement("a", {
+        className: "btn btn-primary",
+        textContent: "Check Update",
+        onclick() {
+          version.checkUpdate(true);
+        },
+      }),
+    ]),
+  );
 
   return root;
 });

@@ -177,21 +177,26 @@ async function init() {
     5089: "Unison Unison M5b",
     5090: "COBOL GnuCOBOLFixed 3.1.2",
   };
-  const languageId = new ObservableValue(unsafeWindow.$("#select-lang select.current").val());
+  const languageId = new ObservableValue(
+    unsafeWindow.$("#select-lang select.current").val(),
+  );
   unsafeWindow.$("#select-lang select").change(() => {
     languageId.value = unsafeWindow.$("#select-lang select.current").val();
   });
-  const language = languageId.map(lang => langMap[lang]);
+  const language = languageId.map((lang) => langMap[lang]);
 
-  const isTestCasesHere = /^\/contests\/[^\/]+\/tasks\//.test(location.pathname);
+  const isTestCasesHere = /^\/contests\/[^\/]+\/tasks\//.test(
+    location.pathname,
+  );
   const taskSelector = doc.querySelector<HTMLSelectElement>("#select-task");
   function getTaskURI(): string {
-    if (taskSelector) return `${location.origin}/contests/${unsafeWindow.contestScreenName}/tasks/${taskSelector.value}`;
+    if (taskSelector)
+      return `${location.origin}/contests/${unsafeWindow.contestScreenName}/tasks/${taskSelector.value}`;
     return `${location.origin}${location.pathname}`;
   }
   interface TestCasesCache {
-    testcases?: TestCase[],
-    state: "loading" | "loaded" | "error",
+    testcases?: TestCase[];
+    state: "loading" | "loaded" | "error";
   }
   const testcasesCache: { [key: string]: TestCasesCache } = {};
   if (taskSelector) {
@@ -199,7 +204,9 @@ async function init() {
       console.log(`Fetching test cases...: ${getTaskURI()}`);
 
       const taskURI = getTaskURI();
-      const load = !(taskURI in testcasesCache) || testcasesCache[taskURI].state == "error";
+      const load =
+        !(taskURI in testcasesCache) ||
+        testcasesCache[taskURI].state == "error";
       if (!load) return;
 
       try {
@@ -209,13 +216,13 @@ async function init() {
       } catch (e) {
         testcasesCache[taskURI] = { state: "error" };
       }
-    }
+    };
     unsafeWindow.$("#select-task").change(doFetchTestCases);
     doFetchTestCases();
   }
 
   async function fetchTestCases(taskUrl: string): Promise<TestCase[]> {
-    const html = await fetch(taskUrl).then(res => res.text());
+    const html = await fetch(taskUrl).then((res) => res.text());
     const taskDoc = new DOMParser().parseFromString(html, "text/html");
     return getTestCases(taskDoc);
   }
@@ -234,7 +241,7 @@ async function init() {
 
     for (const [selector, closestSelector] of selectors) {
       let e = [...doc.querySelectorAll(selector)];
-      e = e.filter(e => {
+      e = e.filter((e) => {
         if (e.closest(".io-style")) return false; // practice2
         if (e.querySelector("var")) return false;
         return true;
@@ -247,27 +254,32 @@ async function init() {
           title: `Sample ${index + 1}`,
           input: input.textContent,
           output: output.textContent,
-          anchor: container.querySelector(".btn-copy") || container.querySelector("h1,h2,h3,h4,h5,h6"),
+          anchor:
+            container.querySelector(".btn-copy") ||
+            container.querySelector("h1,h2,h3,h4,h5,h6"),
         };
       });
     }
 
-    { // maximum_cup_2018_d
+    {
+      // maximum_cup_2018_d
       let e = [...doc.querySelectorAll("#task-statement .div-btn-copy+pre")];
-      e = e.filter(f => !f.childElementCount);
+      e = e.filter((f) => !f.childElementCount);
       if (e.length) {
         return pairs(e).map(([input, output], index) => ({
           selector: "#task-statement .div-btn-copy+pre",
           title: `Sample ${index + 1}`,
           input: input.textContent,
           output: output.textContent,
-          anchor: (input.closest(".part") || input.parentElement).querySelector(".btn-copy"),
+          anchor: (input.closest(".part") || input.parentElement).querySelector(
+            ".btn-copy",
+          ),
         }));
       }
     }
 
     return [];
-  };
+  }
 
   const atcoder = {
     name: "AtCoder",
@@ -291,7 +303,8 @@ async function init() {
         unsafeWindow["ace"].edit($("#editor")).setValue(sourceCode);
         $("#plain-textarea").value = sourceCode;
       } else {
-        doc.querySelector<HTMLTextAreaElement>(".plain-textarea").value = sourceCode;
+        doc.querySelector<HTMLTextAreaElement>(".plain-textarea").value =
+          sourceCode;
         unsafeWindow.$(".editor").data("editor").doc.setValue(sourceCode);
       }
     },
@@ -312,7 +325,11 @@ async function init() {
     },
     get testCases(): TestCase[] {
       const taskURI = getTaskURI();
-      if (taskURI in testcasesCache && testcasesCache[taskURI].state == "loaded") return testcasesCache[taskURI].testcases;
+      if (
+        taskURI in testcasesCache &&
+        testcasesCache[taskURI].state == "loaded"
+      )
+        return testcasesCache[taskURI].testcases;
       if (isTestCasesHere) {
         const testcases = getTestCases(doc);
         testcasesCache[taskURI] = { testcases, state: "loaded" };

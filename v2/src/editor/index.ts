@@ -15,11 +15,10 @@ export default class Editor {
   get sourceCode(): string {
     return this._element.value;
   }
-  
+
   set sourceCode(sourceCode: string) {
     this._element.value = sourceCode;
   }
 
-  setLanguage(lang: string) {
-  }
-};
+  setLanguage(lang: string) {}
+}

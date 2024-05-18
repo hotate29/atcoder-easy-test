@@ -9,8 +9,13 @@ export default abstract class CodeRunner {
   constructor(label: string, site: string) {
     (this as any)._label = `${label} [${site}]`;
   }
-  
-  async test(sourceCode: string, input: string, expectedOutput: string | null, options: Options): Promise<Result> {
+
+  async test(
+    sourceCode: string,
+    input: string,
+    expectedOutput: string | null,
+    options: Options,
+  ): Promise<Result> {
     let result: Result = { status: "IE", input };
     try {
       result = await this.run(sourceCode, input, options);
@@ -19,16 +24,17 @@ export default abstract class CodeRunner {
       return result;
     }
     if (expectedOutput != null) result.expectedOutput = expectedOutput;
-    if (result.status != "OK" || typeof expectedOutput != "string") return result;
+    if (result.status != "OK" || typeof expectedOutput != "string")
+      return result;
     let output = result.output || "";
-    
+
     if (options.trim) {
       expectedOutput = expectedOutput.trim();
       output = output.trim();
     }
-    
+
     let equals: (x: string, y: string) => boolean = (x, y) => x === y;
-    
+
     if (options.allowableError) {
       const floatPattern = /^[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?$/;
       const superEquals = equals;
@@ -36,12 +42,18 @@ export default abstract class CodeRunner {
         if (floatPattern.test(x) || floatPattern.test(y)) {
           const a = parseFloat(x);
           const b = parseFloat(y);
-          return Math.abs(a - b) <= Math.max(options.allowableError, Math.abs(b) * options.allowableError);
+          return (
+            Math.abs(a - b) <=
+            Math.max(
+              options.allowableError,
+              Math.abs(b) * options.allowableError,
+            )
+          );
         }
         return superEquals(x, y);
       };
     }
-    
+
     if (options.split) {
       const superEquals = equals;
       equals = (x, y) => {
@@ -53,13 +65,17 @@ export default abstract class CodeRunner {
           if (!superEquals(xs[i], ys[i])) return false;
         }
         return true;
-      }
+      };
     }
 
     result.status = equals(output, expectedOutput) ? "AC" : "WA";
 
     return result;
   }
-  
-  abstract run(sourceCode: string, input: string, options?: Options): Promise<Result>;
-};
+
+  abstract run(
+    sourceCode: string,
+    input: string,
+    options?: Options,
+  ): Promise<Result>;
+}
