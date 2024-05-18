@@ -9,14 +9,15 @@
   "scripts": {
     "bundle": "rollup -c",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write . --cache"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "jest": "^27.2.1",
-    "prettier": "^2.4.1",
+    "prettier": "^3.2.5",
     "rollup": "^2.56.3",
     "rollup-plugin-html": "^0.2.1",
     "rollup-plugin-jscc": "^2.0.0",
